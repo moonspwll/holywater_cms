@@ -21,9 +21,9 @@ services:
     image: postgres:13
     container_name: nestjs_db_prod
     environment:
-      POSTGRES_DB: my_database
-      POSTGRES_USER: my_user
-      POSTGRES_PASSWORD: my_password
+      POSTGRES_DB: holywater
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: cms_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

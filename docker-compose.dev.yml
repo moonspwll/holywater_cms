@@ -16,21 +16,38 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: my_user
-      DB_PASSWORD: my_password
-      DB_NAME: my_database
+      DB_USER: admin
+      DB_PASSWORD: cms_password
+      DB_NAME: holywater
+    networks:
+     - postgres
+    
 
   db:
-    image: postgres:13
+    image: postgres:latest
     container_name: nestjs_db_dev
     environment:
-      POSTGRES_DB: my_database
-      POSTGRES_USER: my_user
-      POSTGRES_PASSWORD: my_password
+      POSTGRES_DB: holywater # Назва вашої БД
+      POSTGRES_USER: admin # Користувач, який буде створений
+      POSTGRES_PASSWORD: cms_password # Пароль користувача
+      PGDATA: /var/lib/postgresql/data
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
+    restart: unless-stopped
+    networks:
+     - postgres
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -d holywater -U admin"]
+    #   interval: 10s
+    #   retries: 20
+    #   timeout: 5s
+
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
   postgres_data:
