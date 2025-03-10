@@ -32,7 +32,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'warn',
       '@typescript-eslint/no-unused-variables': 'warn',
       '@typescript-eslint/no-this-alias': 'warn',
-      '@typescript-esling/quotes': ['warn', 'single'],
+      '@typescript-esling/quotes': ['warn', 'single']
     },
   },
 );
