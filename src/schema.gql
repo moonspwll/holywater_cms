@@ -16,7 +16,7 @@ type Mutation {
 
 type Query {
   getHello: String!
-  getUser: String!
+  getUserById(id: String!): UserEntity!
 }
 
 type UserEntity {
@@ -25,6 +25,7 @@ type UserEntity {
   id: ID!
   image: String!
   role: UserRole!
+  token: String!
   username: String!
 }
 

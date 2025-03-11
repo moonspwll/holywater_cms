@@ -35,6 +35,9 @@ export class UserEntity {
     @Column({ select: false })
     password?: string;
 
+    @Field()
+    token: string
+
     @CreateDateColumn()
     createdAt: Date;
     /*
