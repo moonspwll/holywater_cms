@@ -2,7 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateUserDto {
+  bio: String
+  email: String!
+  image: String
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  createUser(createUserDto: CreateUserDto!): UserEntity!
+}
+
 type Query {
   getHello: String!
   getUser: String!
+}
+
+type UserEntity {
+  bio: String!
+  email: String!
+  id: ID!
+  image: String!
+  role: UserRole!
+  username: String!
+}
+
+enum UserRole {
+  ADMIN
+  MODERATOR
+  USER
 }
