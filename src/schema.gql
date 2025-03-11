@@ -10,8 +10,14 @@ input CreateUserDto {
   username: String!
 }
 
+input LoginUserDto {
+  password: String!
+  username: String!
+}
+
 type Mutation {
-  createUser(createUserDto: CreateUserDto!): UserEntity!
+  login(loginUserDto: LoginUserDto!): UserEntity!
+  register(createUserDto: CreateUserDto!): UserEntity!
 }
 
 type Query {

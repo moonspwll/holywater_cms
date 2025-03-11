@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { UserModule } from '@app/user/user.module';
 import { AuthModule } from '@app/auth/auth.module';
 import ormconfig from '@app/ormconfig';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import ormconfig from '@app/ormconfig';
 ],
   controllers: [],
   providers: [AppService, AppResolver],
+  // exports: [UserModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

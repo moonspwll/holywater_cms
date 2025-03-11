@@ -17,10 +17,4 @@ export class UserResolver {
     async getUserById(@Args('id', { type: () => String }) id: string): Promise<UserEntity> {
         return this.userService.findById(id);
     }
-
-    @Mutation(() => UserEntity)
-    async createUser(@Args('createUserDto') createUserDto: CreateUserDto): Promise<UserEntity> {
-        const user = await this.userService.createUser(createUserDto);
-        return this.userService.buildUserResponse(user);
-    }
 }

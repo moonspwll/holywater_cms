@@ -45,6 +45,15 @@ export class UserService {
         return user;
     }
 
+    async findByUsername(username: string): Promise<UserEntity> {
+        const user = await this.userRepository.findOne({ where: { username }, select: ['id', 'email', 'username', 'bio', 'password', 'image']});
+
+        if (!user) {
+            throw new HttpException('There is no user with that username', HttpStatus.NOT_FOUND);
+        }
+        return user;
+    }
+
     generateJwt(user: UserEntity): string {
         return sign({
             id: user.id,
@@ -54,12 +63,6 @@ export class UserService {
     }
 
     buildUserResponse(user: UserEntity): any {
-        console.log('asd', {
-            user: {
-                ...user,
-                token: this.generateJwt(user),
-            }
-        });
         return {
             ...user,
             token: this.generateJwt(user),
