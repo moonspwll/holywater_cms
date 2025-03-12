@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { BookEntity } from '@app/book/book.entity';
 import { CreateBookDto } from '@app/book/dto/createBook.dto';
+import { UpdateBookDto } from '@app/book/dto/updateBook.dto';
 
 @Injectable()
 export class BookService {
@@ -15,5 +16,29 @@ export class BookService {
         const book: BookEntity = this.bookRepository.create(createBookDto);
 
         return this.bookRepository.save(book);
+    }
+
+    async updateBook(updateBookDto: UpdateBookDto): Promise<BookEntity> {
+        const book = await this.bookRepository.findOne({ where: { id: updateBookDto.id }});
+
+        if (!book) {
+            throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+        }
+
+        Object.assign(book, updateBookDto);
+
+        return this.bookRepository.save(book, {});
+    }
+
+    async deleteBook(id: number): Promise<BookEntity> {
+        const book = await this.bookRepository.findOne({ where: { id }});
+
+        if (!book) {
+            throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+        }
+
+        await this.bookRepository.delete({ id });
+
+        return book;
     }
 }

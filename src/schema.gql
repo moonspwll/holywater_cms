@@ -51,14 +51,31 @@ input LoginUserDto {
 
 type Mutation {
   createBook(createBookDto: CreateBookDto!): BookEntity!
+  deleteBook(id: Int!): BookEntity!
   login(loginUserDto: LoginUserDto!): UserEntity!
   register(createUserDto: CreateUserDto!): UserEntity!
+  updateBook(updateBookDto: UpdateBookDto!): BookEntity!
 }
 
 type Query {
   getHello: String!
   getString: String!
   getUserById(id: String!): UserEntity!
+}
+
+input UpdateBookDto {
+  authors: String
+  average_rating: Float
+  id: Int!
+  isbn: String
+  isbn13: String
+  language_code: String
+  num_pages: Int
+  publication_date: String
+  publisher: String
+  ratings_count: Int
+  text_reviews_count: Int
+  title: String
 }
 
 type UserEntity {

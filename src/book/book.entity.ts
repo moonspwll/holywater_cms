@@ -1,5 +1,5 @@
 import { hash } from 'bcrypt';
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, Unique } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, Unique, BeforeUpdate } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { UserRole } from '@app/user/enums/user.role.enum';
 
@@ -60,6 +60,7 @@ export class BookEntity {
     createdAt: Date;
 
     @BeforeInsert()
+    // @BeforeUpdate()
     formatPublicationDate() {
         this.publication_date = new Date(this.publication_date);
     }
