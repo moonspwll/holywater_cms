@@ -1,9 +1,6 @@
 import { Mutation, Resolver, Args } from '@nestjs/graphql';
 import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { compare } from 'bcrypt';
-// import { UseGuards } from '@nestjs/common';
-
-// import { Query } from '@nestjs/graphql';
 
 import { UserService } from '@app/user/user.service';
 import { UserEntity } from '@app/user/user.entity';
