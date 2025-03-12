@@ -2,6 +2,35 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BookEntity {
+  authors: String!
+  average_rating: Float!
+  id: ID!
+  isbn: String!
+  isbn13: String!
+  language_code: String!
+  num_pages: Float!
+  publication_date: DateTime!
+  publisher: String!
+  ratings_count: Float!
+  text_reviews_count: Float!
+  title: String!
+}
+
+input CreateBookDto {
+  authors: String!
+  average_rating: Float!
+  isbn: String!
+  isbn13: String!
+  language_code: String!
+  num_pages: Int!
+  publication_date: String!
+  publisher: String!
+  ratings_count: Int!
+  text_reviews_count: Int!
+  title: String!
+}
+
 input CreateUserDto {
   bio: String
   email: String!
@@ -10,18 +39,25 @@ input CreateUserDto {
   username: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 input LoginUserDto {
   password: String!
   username: String!
 }
 
 type Mutation {
+  createBook(createBookDto: CreateBookDto!): BookEntity!
   login(loginUserDto: LoginUserDto!): UserEntity!
   register(createUserDto: CreateUserDto!): UserEntity!
 }
 
 type Query {
   getHello: String!
+  getString: String!
   getUserById(id: String!): UserEntity!
 }
 

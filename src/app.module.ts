@@ -10,6 +10,7 @@ import { AppResolver } from '@app/app.resolver';
 import { AppService } from './app.service';
 import { UserModule } from '@app/user/user.module';
 import { AuthModule } from '@app/auth/auth.module';
+import { BookModule } from '@app/book/book.module';
 import ormconfig from '@app/ormconfig';
 import { UserService } from './user/user.service';
 
@@ -25,6 +26,7 @@ import { UserService } from './user/user.service';
   TypeOrmModule.forRoot(ormconfig),
   UserModule,
   AuthModule,
+  BookModule,
 ],
   controllers: [],
   providers: [AppService, AppResolver],
