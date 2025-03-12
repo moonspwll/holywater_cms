@@ -13,9 +13,15 @@ export class UserService {
     findByName(): string {
         return 'USERRRRRR!!!!!';
     }
-    /*
-        comment and testing
-    */
+    
+    /**
+     * Creates a new user with the provided details.
+     * 
+     * @param {CreateUserDto} createUserDto - Data Transfer Object containing user details.
+     * @returns {Promise<UserEntity>} - A promise that resolves to the created user entity.
+     * 
+     * @throws {HttpException} - Throws an exception if the email or username is already taken.
+     */
     async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
         const { email, password, username, bio, image } = createUserDto;
 
@@ -37,6 +43,13 @@ export class UserService {
         return this.userRepository.save(user);
     }
 
+    /**
+     * Finds a user by their ID.
+     * 
+     * @param id - The ID of the user to find.
+     * @returns A promise that resolves to the found UserEntity.
+     * @throws HttpException if the user is not found.
+     */
     async findById(id: string): Promise<UserEntity> {
         const user = await this.userRepository.findOne({ where: { id }});
         if (!user) {
@@ -45,6 +58,13 @@ export class UserService {
         return user;
     }
 
+    /**
+     * Finds a user by their username.
+     *
+     * @param {string} username - The username of the user to find.
+     * @returns {Promise<UserEntity>} A promise that resolves to the user entity if found.
+     * @throws {HttpException} Throws an exception if no user is found with the given username.
+     */
     async findByUsername(username: string): Promise<UserEntity> {
         const user = await this.userRepository.findOne({ where: { username }, select: ['id', 'email', 'username', 'bio', 'password', 'image']});
 
@@ -54,6 +74,12 @@ export class UserService {
         return user;
     }
 
+    /**
+     * Generates a JSON Web Token (JWT) for the given user.
+     *
+     * @param {UserEntity} user - The user entity for which the JWT is generated.
+     * @returns {string} The generated JWT as a string.
+     */
     generateJwt(user: UserEntity): string {
         return sign({
             id: user.id,
@@ -62,6 +88,12 @@ export class UserService {
         }, JWT_SECRET);
     }
 
+    /**
+     * Builds a response object for a user.
+     *
+     * @param {UserEntity} user - The user entity to build the response for.
+     * @returns {any} The user response object, including a JWT token.
+     */
     buildUserResponse(user: UserEntity): any {
         return {
             ...user,

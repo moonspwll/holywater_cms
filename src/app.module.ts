@@ -30,7 +30,6 @@ import { UserService } from './user/user.service';
 ],
   controllers: [],
   providers: [AppService, AppResolver],
-  // exports: [UserModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

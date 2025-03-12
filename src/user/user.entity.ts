@@ -17,9 +17,17 @@ export class UserEntity {
     @Field()
     @Column({ default: '' })
     username: string;
-    /*
 
-    */
+    /**
+     * The role of the user within the system.
+     * 
+     * @type {UserRole}
+     * @default UserRole.USER
+     * 
+     * @remarks
+     * This field is an enum type that represents the user's role. 
+     * The default value is set to `UserRole.USER`.
+     */
     @Field(() => UserRole)
     @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
     role: UserRole;
@@ -40,10 +48,15 @@ export class UserEntity {
 
     @CreateDateColumn()
     createdAt: Date;
-    /*
-
-    */
+    
     @BeforeInsert() 
+    /**
+     * Hashes the user's password using a salt factor of 10.
+     * This method should be called before saving the user entity to the database
+     * to ensure the password is securely hashed.
+     *
+     * @returns {Promise<void>} A promise that resolves when the password has been hashed.
+     */
     async hashPassword() {
         this.password = await hash(this.password, 10);
     }

@@ -11,7 +11,7 @@ import { AuthGuard } from '@app/auth/guards/auth.guard';
 @Resolver(() => UserEntity)
 export class UserResolver {
     constructor(private readonly userService: UserService) { }
-
+    
     @UseGuards(AuthGuard)
     @Query(() => UserEntity)
     async getUserById(@Args('id', { type: () => String }) id: string): Promise<UserEntity> {
