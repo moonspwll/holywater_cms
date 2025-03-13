@@ -17,6 +17,12 @@ type BookEntity {
   title: String!
 }
 
+type BookSearchResponse {
+  books: [BookEntity!]!
+  page: Int!
+  total: Int!
+}
+
 input CreateBookDto {
   authors: String!
   average_rating: Float!
@@ -58,9 +64,22 @@ type Mutation {
 }
 
 type Query {
+  getBooks(searchBooksDto: SearchBooksDto!): BookSearchResponse!
   getHello: String!
   getString: String!
   getUserById(id: String!): UserEntity!
+}
+
+input SearchBooksDto {
+  authors: String
+  average_rating: Float
+  num_pages: Int
+  order: String
+  page: Int
+  page_size: Int
+  publication_date: String
+  sort_by: String
+  title: String
 }
 
 input UpdateBookDto {

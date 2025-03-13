@@ -7,6 +7,10 @@ import { BookEntity } from '@app/book/book.entity';
 import { BookService } from '@app/book/book.service';
 import { CreateBookDto } from '@app/book/dto/createBook.dto';
 import { UpdateBookDto } from '@app/book/dto/updateBook.dto';
+import { SearchBooksDto } from '@app/book/dto/searchBooks.dto';
+import { BookSearchResponse } from '@app/book/dto/searchBooksResponse.dto';
+
+import { BookSearchRequest } from '@app/book/interfaces/book.search.interface';
 // import { CreateUserDto } from '@app/user/dto/createUser.dto';
 import { AuthGuard } from '@app/auth/guards/auth.guard';
 import { RolesGuard } from '@app/book/guards/roles.guard';
@@ -28,17 +32,24 @@ export class BookResolver {
     }
     // CRUD
     @UseGuards(RolesGuard, AuthGuard)
-    @Roles(UserRole.ADMIN)
+    // TEMPORARY
+    @Roles(UserRole.MODERATOR)
     @Mutation(() => BookEntity)
     async createBook(@Args('createBookDto') createBookDto: CreateBookDto): Promise<BookEntity> {
         return this.bookService.createBook(createBookDto);
     }
 
     @UseGuards(RolesGuard, AuthGuard)
+    @Roles(UserRole.ADMIN, UserRole.MODERATOR, UserRole.USER)
+    @Query(() => BookSearchResponse)
+    async getBooks(@Args('searchBooksDto') searchBooksDto: SearchBooksDto): Promise<BookSearchRequest> {
+        return this.bookService.getBooks(searchBooksDto);
+    }
+
+    @UseGuards(RolesGuard, AuthGuard)
     @Roles(UserRole.MODERATOR, UserRole.ADMIN)
     @Mutation(() => BookEntity)
     async updateBook(@Args('updateBookDto') updateBookDto: UpdateBookDto): Promise<BookEntity> {
-        console.log('asd', updateBookDto);
         return this.bookService.updateBook(updateBookDto)
     }
 
@@ -47,5 +58,5 @@ export class BookResolver {
     @Mutation(() => BookEntity)
     async deleteBook(@Args('id', { type: () => Int }) id: number): Promise<BookEntity> {
         return this.bookService.deleteBook(id);
-    }   
+    }
 }
