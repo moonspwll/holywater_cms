@@ -1,5 +1,7 @@
 import { Repository } from 'typeorm';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { BookEntity } from '@app/book/book.entity';
@@ -11,7 +13,13 @@ import { BookSearchRequest } from '@app/book/interfaces/book.search.interface';
 
 @Injectable()
 export class BookService {
-    constructor(@InjectRepository(BookEntity) private readonly bookRepository: Repository<BookEntity>) {}
+    constructor(
+        @InjectRepository(BookEntity)
+        private readonly bookRepository: Repository<BookEntity>,
+
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
+    ) {}
     /*
         comment and testing
     */
@@ -58,6 +66,12 @@ export class BookService {
             order = 'DESC',
         } = searchBooksDto;
 
+        const cacheKey = this.generateCacheKey(searchBooksDto);
+        const cachedResults = await this.cacheManager.get<string>(cacheKey);
+        
+        if (cachedResults) {
+            return JSON.parse(cachedResults);
+        }
         const queryBuilder = this.bookRepository.createQueryBuilder('book');
         // Search by title
         if (title) {
@@ -95,6 +109,12 @@ export class BookService {
         // Get total count of books
         const count = await queryBuilder.getCount();
 
+        this.cacheManager.set(cacheKey, JSON.stringify({
+            books: searchResults,
+            total: count,
+            page,
+        }), 60 * 1000);
+
         return {
             books: searchResults,
             total: count,
@@ -102,4 +122,11 @@ export class BookService {
         }
 
     }
+
+    private generateCacheKey(dto: SearchBooksDto): string {
+        return `books:${Object.entries(dto)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&')}`;
+    }
+      
 }

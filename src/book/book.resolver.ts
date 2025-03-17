@@ -33,7 +33,7 @@ export class BookResolver {
     // CRUD
     @UseGuards(RolesGuard, AuthGuard)
     // TEMPORARY
-    @Roles(UserRole.MODERATOR)
+    @Roles(UserRole.USER)
     @Mutation(() => BookEntity)
     async createBook(@Args('createBookDto') createBookDto: CreateBookDto): Promise<BookEntity> {
         return this.bookService.createBook(createBookDto);

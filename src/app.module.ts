@@ -1,6 +1,8 @@
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
+import { CacheModule } from '@nestjs/cache-manager';
+import { createKeyv } from '@keyv/redis';
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { join } from 'path';
 
@@ -13,9 +15,16 @@ import { AuthModule } from '@app/auth/auth.module';
 import { BookModule } from '@app/book/book.module';
 import ormconfig from '@app/ormconfig';
 import { UserService } from './user/user.service';
-
+console.log(process.env.REDIS_HOST)
 @Module({
   imports: [
+    CacheModule.registerAsync({
+      useFactory: async () => {
+        return {
+          store: createKeyv(`redis://redis:6379`),
+        };
+      },
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'), 
       driver: ApolloDriver,

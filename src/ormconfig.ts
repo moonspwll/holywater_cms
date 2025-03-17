@@ -1,6 +1,5 @@
 import { DataSourceOptions } from 'typeorm';
 
-console.log('prosess.', process.env);
 
 const config: DataSourceOptions = {
     type: 'postgres',
@@ -12,7 +11,7 @@ const config: DataSourceOptions = {
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: false,
     migrations: [__dirname + '/migrations/*{.ts,.js}'],
-    logging: true,
+    logging: false,
 };
 
 export default config;

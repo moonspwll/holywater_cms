@@ -49,6 +49,7 @@ services:
     image: redis:latest
     container_name: nestjs_redis_dev
     environment:
+      REDIS_HOST: redis
       REDIS_USER: admin
       REDIS_PASSWORD: redis_password123
     restart: unless-stopped
