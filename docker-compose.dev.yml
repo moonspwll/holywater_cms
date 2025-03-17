@@ -14,6 +14,7 @@ services:
     depends_on:
       - db
       - redis
+      - dynamodb
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -66,7 +67,22 @@ services:
     volumes:
       - $HOME/db-storage/redis-cms:/data
     networks:
-      - app_network  
+      - app_network 
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    working_dir: /home/dynamodblocal
+    volumes:
+      - dynamodb-data:/home/dynamodblocal
+    environment:
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_REGION=us-west-2 
+    networks:
+      - app_network
 
 networks:
   app_network:
@@ -74,3 +90,4 @@ networks:
 
 volumes:
   postgres_data:
+  dynamodb-data:

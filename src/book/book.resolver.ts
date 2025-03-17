@@ -1,6 +1,6 @@
 import { Mutation, Resolver, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { Query } from '@nestjs/graphql';
+import { Query, Context } from '@nestjs/graphql';
 
 // import { UserService } from '@app/user/user.service';
 import { BookEntity } from '@app/book/book.entity';
@@ -16,6 +16,7 @@ import { AuthGuard } from '@app/auth/guards/auth.guard';
 import { RolesGuard } from '@app/book/guards/roles.guard';
 import { Roles } from '@app/book/decorators/roles.decorator';
 import { UserRole } from '@app/user/enums/user.role.enum';
+import { RequestExpress } from '@app/types/requestExpress.interface';
 
 
 @Resolver(() => BookEntity)
@@ -35,28 +36,32 @@ export class BookResolver {
     // TEMPORARY
     @Roles(UserRole.USER)
     @Mutation(() => BookEntity)
-    async createBook(@Args('createBookDto') createBookDto: CreateBookDto): Promise<BookEntity> {
-        return this.bookService.createBook(createBookDto);
+    async createBook(@Args('createBookDto') createBookDto: CreateBookDto, @Context() context: { req: RequestExpress }): Promise<BookEntity> {
+        const userId = context.req?.user?.id || '';
+        return this.bookService.createBook(createBookDto, userId);
     }
 
     @UseGuards(RolesGuard, AuthGuard)
     @Roles(UserRole.ADMIN, UserRole.MODERATOR, UserRole.USER)
     @Query(() => BookSearchResponse)
-    async getBooks(@Args('searchBooksDto') searchBooksDto: SearchBooksDto): Promise<BookSearchRequest> {
+    async getBooks(@Args('searchBooksDto') searchBooksDto: SearchBooksDto, @Context() context: { req: RequestExpress }): Promise<BookSearchRequest> {
         return this.bookService.getBooks(searchBooksDto);
     }
 
     @UseGuards(RolesGuard, AuthGuard)
-    @Roles(UserRole.MODERATOR, UserRole.ADMIN)
+    // TEMPORARY
+    @Roles(UserRole.MODERATOR, UserRole.ADMIN, UserRole.USER)
     @Mutation(() => BookEntity)
-    async updateBook(@Args('updateBookDto') updateBookDto: UpdateBookDto): Promise<BookEntity> {
-        return this.bookService.updateBook(updateBookDto)
+    async updateBook(@Args('updateBookDto') updateBookDto: UpdateBookDto, @Context() context: { req: RequestExpress }): Promise<BookEntity> {
+        const userId = context.req?.user?.id || '';
+        return this.bookService.updateBook(updateBookDto, userId);
     }
 
     @UseGuards(RolesGuard, AuthGuard)
-    @Roles(UserRole.ADMIN, UserRole.MODERATOR)
+    @Roles(UserRole.ADMIN, UserRole.MODERATOR, UserRole.USER)
     @Mutation(() => BookEntity)
-    async deleteBook(@Args('id', { type: () => Int }) id: number): Promise<BookEntity> {
-        return this.bookService.deleteBook(id);
+    async deleteBook(@Args('id', { type: () => Int }) id: number, @Context() context: { req: RequestExpress }): Promise<BookEntity> {
+        const userId = context.req?.user?.id || '';
+        return this.bookService.deleteBook(id, userId);
     }
 }

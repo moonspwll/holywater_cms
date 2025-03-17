@@ -8,6 +8,7 @@ import { BookEntity } from '@app/book/book.entity';
 import { CreateBookDto } from '@app/book/dto/createBook.dto';
 import { UpdateBookDto } from '@app/book/dto/updateBook.dto';
 import { SearchBooksDto } from '@app/book/dto/searchBooks.dto';
+import { DynamoService } from '@app/dynamo/dynamo.service';
 
 import { BookSearchRequest } from '@app/book/interfaces/book.search.interface';
 
@@ -19,34 +20,74 @@ export class BookService {
 
         @Inject(CACHE_MANAGER)
         private readonly cacheManager: Cache,
+
+        private readonly dynamoService: DynamoService,
     ) {}
+
+    private readonly DYNAMODB_TABLE_NAME: string = 'UserActivityLogs';
     /*
         comment and testing
     */
-    async createBook(createBookDto: CreateBookDto): Promise<BookEntity> {
+    async createBook(createBookDto: CreateBookDto, userId: string): Promise<BookEntity> {
         const book: BookEntity = this.bookRepository.create(createBookDto);
 
-        return this.bookRepository.save(book);
+        let savedBook: BookEntity;
+
+        try {
+            savedBook = await this.bookRepository.save(book);
+        } catch (error) {
+            throw new HttpException('Error creating book', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,
+            {
+                ActivityType: 'create',
+                UserId: userId,
+                Timestamp: new Date().getTime(),
+                bookId: savedBook.id 
+            }
+        );
+
+        return savedBook;
     }
 
-    async updateBook(updateBookDto: UpdateBookDto): Promise<BookEntity> {
+    async updateBook(updateBookDto: UpdateBookDto, userId: string): Promise<BookEntity> {
         const book = await this.bookRepository.findOne({ where: { id: updateBookDto.id }});
 
         if (!book) {
             throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
         }
 
+        this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,
+            {
+                ActivityType: 'update',
+                UserId: userId,
+                Timestamp: new Date().getTime(),
+                bookId: book.id,
+                updatedFields: JSON.stringify(updateBookDto),
+            }
+        );
+
         Object.assign(book, updateBookDto);
 
         return this.bookRepository.save(book, {});
     }
 
-    async deleteBook(id: number): Promise<BookEntity> {
+    async deleteBook(id: number, userId: string): Promise<BookEntity> {
         const book = await this.bookRepository.findOne({ where: { id }});
 
         if (!book) {
             throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
         }
+
+        this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,
+            {
+                ActivityType: 'delete',
+                UserId: userId,
+                Timestamp: new Date().getTime(),
+                bookId: book.id,
+            }
+        );
 
         await this.bookRepository.delete({ id });
 

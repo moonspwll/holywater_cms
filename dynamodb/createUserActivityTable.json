@@ -1,0 +1,53 @@
+{
+    "TableName": "UserActivityLogs",
+    "KeySchema": [
+      {
+        "AttributeName": "UserId",
+        "KeyType": "HASH"
+      },
+      {
+        "AttributeName": "Timestamp",
+        "KeyType": "RANGE"
+      }
+    ],
+    "AttributeDefinitions": [
+      {
+        "AttributeName": "UserId",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "Timestamp",
+        "AttributeType": "N"
+      },
+      {
+        "AttributeName": "ActivityType",
+        "AttributeType": "S"
+      }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    },
+    "GlobalSecondaryIndexes": [
+      {
+        "IndexName": "ActivityTypeIndex",
+        "KeySchema": [
+          {
+            "AttributeName": "ActivityType",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "Timestamp",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        }
+      }
+    ]
+  }

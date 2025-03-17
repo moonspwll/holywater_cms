@@ -13,6 +13,7 @@ import { AppService } from './app.service';
 import { UserModule } from '@app/user/user.module';
 import { AuthModule } from '@app/auth/auth.module';
 import { BookModule } from '@app/book/book.module';
+import { DynamoModule } from '@app/dynamo/dynamo.module';
 import ormconfig from '@app/ormconfig';
 import { UserService } from './user/user.service';
 console.log(process.env.REDIS_HOST)
@@ -36,6 +37,7 @@ console.log(process.env.REDIS_HOST)
   UserModule,
   AuthModule,
   BookModule,
+  DynamoModule,
 ],
   controllers: [],
   providers: [AppService, AppResolver],
