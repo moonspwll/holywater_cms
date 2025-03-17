@@ -1,16 +1,18 @@
 import { DataSourceOptions } from 'typeorm';
 
+console.log('prosess.', process.env);
+
 const config: DataSourceOptions = {
     type: 'postgres',
-    host: 'db',
-    port: 5432,
-    username: 'admin',
-    password: 'cms_password',
-    database: 'holywater',
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: false,
     migrations: [__dirname + '/migrations/*{.ts,.js}'],
-    // logging: true,
+    logging: true,
 };
 
 export default config;
