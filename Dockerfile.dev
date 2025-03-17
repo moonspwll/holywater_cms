@@ -2,9 +2,6 @@ FROM node:20
 
 WORKDIR /app
 
-# Встановлюємо netcat
-RUN apt-get update && apt-get install -y netcat
-
 COPY package*.json ./
 
 RUN npm install
@@ -13,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start:dev"]
+CMD ["node", "dist/main"]

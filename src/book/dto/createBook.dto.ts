@@ -1,4 +1,4 @@
-import { IsNotEmpty, Max } from 'class-validator';
+import { IsNotEmpty, Max, IsNumber } from 'class-validator';
 import { InputType, Field, GraphQLISODateTime, Int, Float } from '@nestjs/graphql';
 
 @InputType()
@@ -25,6 +25,7 @@ export class CreateBookDto {
     readonly isbn13: string;
 
     @Field(() => Int)
+    @IsNumber()
     @IsNotEmpty()
     readonly num_pages: number;
 

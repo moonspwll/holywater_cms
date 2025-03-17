@@ -2,7 +2,6 @@ import { Mutation, Resolver, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Query, Context } from '@nestjs/graphql';
 
-// import { UserService } from '@app/user/user.service';
 import { BookEntity } from '@app/book/book.entity';
 import { BookService } from '@app/book/book.service';
 import { CreateBookDto } from '@app/book/dto/createBook.dto';
@@ -11,7 +10,6 @@ import { SearchBooksDto } from '@app/book/dto/searchBooks.dto';
 import { BookSearchResponse } from '@app/book/dto/searchBooksResponse.dto';
 
 import { BookSearchRequest } from '@app/book/interfaces/book.search.interface';
-// import { CreateUserDto } from '@app/user/dto/createUser.dto';
 import { AuthGuard } from '@app/auth/guards/auth.guard';
 import { RolesGuard } from '@app/book/guards/roles.guard';
 import { Roles } from '@app/book/decorators/roles.decorator';
