@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { GqlHttpExceptionFilter } from '@app/filters/exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,6 +29,8 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useGlobalFilters(new GqlHttpExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }
