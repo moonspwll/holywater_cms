@@ -1,19 +1,3 @@
-Development 
-
-docker-compose -f docker-compose.dev.yml up --build
-
-Production
-
-docker-compose -f docker-compose.prod.yml up --build
-
-Run DB migrations
-
-sudo docker exec -it nestjs_backend_dev npm run db:migrate
-
-Connect to DB with this command
-
-sudo docker exec -it nestjs_db_dev psql -U admin -d holywater
-
 # Book CMS
 
 **Description**: This is a Book CMS that allows users to create accounts, input book data, edit book details, delete books, and all the data is stored in the databases.
@@ -76,3 +60,19 @@ docker exec -it nestjs_backend_dev npm run test:e2e
 ```
 
 ## Usage
+
+You can use Postman API Collection for manual testing or developing APIs. Import the provided Postman collection to get started with testing the endpoints.
+
+You can find the **CMS_API.postman_collection.json** file in the project.
+
+This file contains the Postman API collection. To import it into your Postman, follow these steps:
+
+1. Open Postman
+2. Click on File > Import....
+3. Simply drag and drop the file into the import window.
+
+All requests have meaningful names that reflect their functions.
+The request body and variables are also provided separately.
+
+To perform basic book management operations, first execute the Create user request or Login user request if the user already exists. Then, take the token from the response and insert it into the headers:
+**Authorization: Token yourtokenasdAasdfasfasf...**
