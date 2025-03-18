@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "cc45b636-3301-4d3f-9ba0-225ca56bef7d",
+		"name": "CMS_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14985142"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateUser(\n    $email: String!,\n    $password: String!,\n    $username: String!,\n    $bio: String!,\n    $image: String!\n    ) {\n  user: register(createUserDto: {\n    email: $email,\n    password: $password,\n    username: $username,\n    bio: $bio,\n    image: $image\n  }) {\n    id\n    email\n    role,\n    bio,\n    image,\n    token\n  }\n}\n",
+						"variables": "{\n    \"email\": \"emailuser@gmail.com\",\n    \"password\": \"123\",\n    \"username\": \"testUser\",\n    \"bio\": \"This is my bio\",\n    \"image\": \"https://imgur.12312.com\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				},
+				"description": "Create user:"
+			},
+			"response": []
+		},
+		{
+			"name": "Login user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateUser(\n    $password: String!,\n    $username: String!\n    ) {\n  user: login(loginUserDto: {\n    username: $username,\n    password: $password,\n  }) {\n    id\n    email\n    bio,\n    image,\n    token\n  }\n}\n",
+						"variables": "{\n    \"username\": \"testUser\",\n    \"password\": \"123\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user by ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDY1ZGRjLWRiYjAtNGZhZi04YTY1LTgwOTEzMDBkYzhjZSIsImVtYWlsIjoiZW1haWx1c2VyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE3NDIzMTY1NjR9.Dwhbdtq3kBo2WG8ve4IHnI762QNgg0_wrhPUYurOL54",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetUserById ($id: String!){\n  user: getUserById(id: $id) {\n    id\n    email\n    username\n    role\n  }\n}",
+						"variables": "{\n    \"id\": \"67465ddc-dbb0-4faf-8a65-8091300dc8ce\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create book",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDY1ZGRjLWRiYjAtNGZhZi04YTY1LTgwOTEzMDBkYzhjZSIsImVtYWlsIjoiZW1haWx1c2VyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE3NDIzMTY1NjR9.Dwhbdtq3kBo2WG8ve4IHnI762QNgg0_wrhPUYurOL54",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation AddBook(\n  $title: String!,\n  $authors: String!,\n  $average_rating: Float!,\n  $isbn: String!,\n  $isbn13: String!,\n  $num_pages: Int!,\n  $ratings_count: Int!,\n  $text_reviews_count: Int!,\n  $publication_date: String!,\n  $publisher: String!,\n  $language_code: String!\n) {\n  book: createBook(createBookDto: {\n    title: $title,\n    authors: $authors,\n    average_rating: $average_rating,\n    isbn: $isbn,\n    isbn13: $isbn13,\n    num_pages: $num_pages,\n    ratings_count: $ratings_count,\n    text_reviews_count: $text_reviews_count,\n    publication_date: $publication_date,\n    publisher: $publisher,\n    language_code: $language_code\n  }) {\n    id\n    title\n    authors\n    average_rating\n    isbn\n    isbn13\n    num_pages\n    ratings_count\n    text_reviews_count\n    publication_date\n    publisher\n  }\n}\n",
+						"variables": "{\n    \"title\": \"Lunar Echoes\",\n    \"authors\": \"Christopher Vale\",\n    \"average_rating\": 5.0,\n    \"isbn\": \"05942122234\",\n    \"isbn13\": \"9331334287932\",\n    \"num_pages\": 123,\n    \"ratings_count\": 19876,\n    \"text_reviews_count\": 1123,\n    \"publication_date\": \"03/15/2017\",\n    \"publisher\": \"Moonrise Books\",\n    \"language_code\": \"en\"\n  }"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update book",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDY1ZGRjLWRiYjAtNGZhZi04YTY1LTgwOTEzMDBkYzhjZSIsImVtYWlsIjoiZW1haWx1c2VyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE3NDIzMTY1NjR9.Dwhbdtq3kBo2WG8ve4IHnI762QNgg0_wrhPUYurOL54",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UpdateBook(\n  $id: Int!,\n  $publisher: String!\n) {\n  book: updateBook(updateBookDto: {\n    id: $id,\n    publisher: $publisher\n  }) {\n    id\n    publisher\n  }\n}\n",
+						"variables": "{   \n    \"id\": 7,\n    \"publisher\": \"ME TITLE\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete book",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDY1ZGRjLWRiYjAtNGZhZi04YTY1LTgwOTEzMDBkYzhjZSIsImVtYWlsIjoiZW1haWx1c2VyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE3NDIzMTY1NjR9.Dwhbdtq3kBo2WG8ve4IHnI762QNgg0_wrhPUYurOL54",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation DeleteBook($id: Int!) {\n  deleteBook(id: $id) {\n    id\n    title\n  }\n}\n",
+						"variables": "{   \n    \"id\": 7\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search books",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDY1ZGRjLWRiYjAtNGZhZi04YTY1LTgwOTEzMDBkYzhjZSIsImVtYWlsIjoiZW1haWx1c2VyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoidGVzdFVzZXIiLCJpYXQiOjE3NDIzMTY1NjR9.Dwhbdtq3kBo2WG8ve4IHnI762QNgg0_wrhPUYurOL54",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query SearchBooks(\n  $title: String!\n  $authors: String!\n  $average_rating: Float!\n  $num_pages: Int!\n  $publication_date: String!\n  $page: Int!\n  $page_size: Int!\n  $sort_by: String!\n  $order: String!\n) {\n  books: getBooks(searchBooksDto: {\n    title: $title\n    authors: $authors\n    average_rating: $average_rating\n    num_pages: $num_pages\n    publication_date: $publication_date,\n    page: $page\n    page_size: $page_size \n    sort_by: $sort_by\n    order: $order\n  }) {\n    books {\n        id\n        title\n        average_rating\n        authors\n        num_pages\n        text_reviews_count\n        publication_date\n    }\n    page\n    total\n  }\n}\n",
+						"variables": "{   \n    \"title\": \"\",\n    \"authors\": \"\",\n    \"average_rating\": 4,\n    \"num_pages\": 344,\n    \"publication_date\": \"\",\n    \"page\": 1,\n    \"page_size\": 11,\n    \"sort_by\": \"num_pages\",\n    \"order\": \"DESC\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
