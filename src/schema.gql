@@ -90,7 +90,7 @@ input UpdateBookDto {
   isbn13: String
   language_code: String
   num_pages: Int
-  publication_date: String
+  publication_date: DateTime
   publisher: String
   ratings_count: Int
   text_reviews_count: Int

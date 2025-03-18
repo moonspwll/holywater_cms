@@ -49,11 +49,11 @@ export class UpdateBookDto {
     @IsNotEmpty()
     readonly text_reviews_count: number;
 
-    @Field({ nullable: true })
+    @Field(() => Date, { nullable: true })
     @IsOptional()
     @IsNotEmpty()
-    @Transform(({ value }) => new Date(value))
-    readonly publication_date: string;
+    // @Transform(({ value }) => new Date(value))
+    readonly publication_date: Date;
 
     @Field({ nullable: true })
     @IsOptional()

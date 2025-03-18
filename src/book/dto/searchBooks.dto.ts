@@ -7,12 +7,14 @@ import { InputType, Field, Int, Float } from '@nestjs/graphql';
 export class SearchBooksDto {
     @Field({ nullable: true })
     @IsOptional()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @Transform(({ value }) => (value === "" ? undefined : value))
     readonly title?: string;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @Transform(({ value }) => (value === "" ? undefined : value))
     readonly authors?: string;
 
     @Field(() => Float, { nullable: true })
@@ -23,12 +25,14 @@ export class SearchBooksDto {
 
     @Field(() => Int, { nullable: true })
     @IsOptional()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @Transform(({ value }) => (value === 0 ? undefined : value))
     readonly num_pages?: number;
 
     @Field({ nullable: true })
     @IsOptional()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    @Transform(({ value }) => (value === "" ? undefined : value))
     // @Transform(({ value }) => new Date(value))
     readonly publication_date?: string;
 

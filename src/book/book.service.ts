@@ -42,7 +42,7 @@ export class BookService {
         this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,
             {
                 ActivityType: 'create',
-                UserId: userId,
+                UserId: userId || 'test',
                 Timestamp: new Date().getTime(),
                 bookId: savedBook.id 
             }
@@ -61,7 +61,7 @@ export class BookService {
         this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,
             {
                 ActivityType: 'update',
-                UserId: userId,
+                UserId: userId || 'test',
                 Timestamp: new Date().getTime(),
                 bookId: book.id,
                 updatedFields: JSON.stringify(updateBookDto),
