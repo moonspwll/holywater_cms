@@ -1,3 +1,6 @@
+/**
+ * Represents the response for a book search operation.
+ */
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { BookEntity } from '@app/book/book.entity';
 

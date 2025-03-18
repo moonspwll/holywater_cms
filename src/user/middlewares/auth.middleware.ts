@@ -7,13 +7,27 @@ import { JWT_SECRET } from '@app/config';
 import { UserService } from '@app/user/user.service';
 
 @Injectable()
+
 /**
- * Middleware to handle authentication for incoming requests.
+ * Middleware that handles authentication for incoming requests.
  * 
  * This middleware checks for the presence of an authorization header in the request.
  * If the header is present, it verifies the JWT token and attaches the corresponding user
  * to the request object. If the token is invalid or not present, it sets the user to null.
  * 
+ * @class AuthMiddleware
+ * @implements {NestMiddleware}
+ * 
+ * @constructor
+ * @param {UserService} userService - The user service used to fetch user details.
+ * 
+ * @method use
+ * @async
+ * @param {RequestExpress} req - The incoming request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next middleware function in the stack.
+ * 
+ * @returns {Promise<void>}
  */
 export class AuthMiddleware implements NestMiddleware {
     constructor(private readonly userService: UserService) { }

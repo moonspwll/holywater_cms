@@ -1,3 +1,10 @@
+/**
+ * Guard that checks if the user has the required roles to access a particular route or resolver.
+ * 
+ * This guard uses the `Reflector` service to retrieve the roles metadata set on the route or resolver.
+ * It then checks if the user's role matches any of the required roles.
+ * 
+ */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';

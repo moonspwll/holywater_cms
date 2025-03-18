@@ -12,6 +12,11 @@ import { AuthGuard } from '@app/auth/guards/auth.guard';
 export class UserResolver {
     constructor(private readonly userService: UserService) { }
     
+    /**
+     * Retrieves a user by their ID.
+     * @param id - The ID of the user to retrieve.
+     * @returns A promise that resolves to the user entity.
+     */
     @UseGuards(AuthGuard)
     @Query(() => UserEntity)
     async getUserById(@Args('id', { type: () => String }) id: string): Promise<UserEntity> {

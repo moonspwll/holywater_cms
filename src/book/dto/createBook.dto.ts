@@ -1,3 +1,7 @@
+/**
+ * Data Transfer Object (DTO) for creating a new book.
+ * This class is used to define the structure and validation rules for the book creation input.
+ */
 import { IsNotEmpty, Max, IsNumber } from 'class-validator';
 import { InputType, Field, GraphQLISODateTime, Int, Float } from '@nestjs/graphql';
 

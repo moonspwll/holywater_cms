@@ -1,3 +1,9 @@
+/**
+ * Data Transfer Object (DTO) for updating a book.
+ * This class is used to define the structure of the data that will be used
+ * to update a book in the system. It includes various fields that can be
+ * optionally updated, each with its own validation rules.
+ */
 import { IsNotEmpty, Max, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { InputType, Field, Int, Float } from '@nestjs/graphql';

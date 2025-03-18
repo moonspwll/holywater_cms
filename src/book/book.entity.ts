@@ -1,8 +1,11 @@
-import { hash } from 'bcrypt';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, Unique, BeforeUpdate } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { UserRole } from '@app/user/enums/user.role.enum';
-
+/**
+ * Represents a book entity in the database.
+ * 
+ * @decorator `@ObjectType()`
+ * @decorator `@Entity({ name: 'books' })`
+ */
 @ObjectType()
 @Entity({ name: 'books'})
 export class BookEntity {

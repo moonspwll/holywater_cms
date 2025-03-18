@@ -3,6 +3,15 @@ import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn 
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { UserRole } from '@app/user/enums/user.role.enum';
 
+/**
+ * Represents a user entity in the system.
+ * 
+ * @remarks
+ * This class is used to define the structure of the user entity and its corresponding database table.
+ * It includes fields for the user's ID, email, username, role, bio, image, password, token, and creation date.
+ * The password is hashed before being inserted into the database.
+ *
+ */
 @ObjectType()
 @Entity({ name: 'users'})
 export class UserEntity {

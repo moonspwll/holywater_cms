@@ -7,11 +7,12 @@ export class DynamoService {
   private readonly dynamoDbClient: DynamoDBDocumentClient;
 
   constructor() {
+    // Creadentials are hardcoded for local development
     const client = new DynamoDBClient({
       region: 'us-west-2',
       endpoint: 'http://dynamodb:8000',
       credentials: {
-        accessKeyId: 'local', // Фейкові ключі для локального використання
+        accessKeyId: 'local',
         secretAccessKey: 'local',
       },
     });

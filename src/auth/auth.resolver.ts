@@ -11,12 +11,32 @@ import { LoginUserDto } from '@app/auth/dto/loginUser.dto';
 export class AuthResolver {
     constructor(private readonly userService: UserService) { }
     @Mutation(() => UserEntity)
+    /**
+     * Registers a new user.
+     * 
+     * This mutation creates a new user using the data from `createUserDto`
+     * and returns a user object with the appropriate response information.
+     * 
+     * @param {CreateUserDto} createUserDto - The object containing data to create a new user.
+     * @returns {Promise<UserEntity>} - A promise that returns the user object after it is created.
+     */
     async register(@Args('createUserDto') createUserDto: CreateUserDto): Promise<UserEntity> {
         const user = await this.userService.createUser(createUserDto);
         return this.userService.buildUserResponse(user);
     }
 
     @Mutation(() => UserEntity)
+    /**
+     * Logs in a user with provided credentials.
+     * 
+     * This mutation accepts a `loginUserDto` containing the username and password,
+     * checks if the user exists, and if the password is correct. If successful,
+     * it returns a user object excluding the password field.
+     * 
+     * @param {LoginUserDto} loginUserDto - The object containing the username and password to log in.
+     * @returns {Promise<UserEntity>} - A promise that returns the user object (without the password) after successful login.
+     * @throws {HttpException} - Throws an exception if the user does not exist or the password is incorrect.
+     */
     async login(@Args('loginUserDto') loginUserDto: LoginUserDto): Promise<UserEntity> {
         const user = await this.userService.findByUsername(loginUserDto.username);
 
