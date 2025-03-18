@@ -35,6 +35,8 @@
     "@nestjs/graphql": "^13.0.3",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
+    "apollo-server-core": "^3.13.0",
+    "apollo-server-express": "^3.13.0",
     "bcrypt": "^5.1.1",
     "cache-manager": "^6.4.1",
     "class-transformer": "^0.5.1",
@@ -88,6 +90,9 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "moduleNameMapper": {
+      "^@app/(.*)$": "<rootDir>/$1"
+    },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
