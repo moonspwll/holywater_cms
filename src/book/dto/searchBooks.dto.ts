@@ -1,5 +1,5 @@
 import { InputType, Field, Float, Int } from '@nestjs/graphql';
-import { IsOptional, IsNotEmpty, Max } from 'class-validator';
+import { IsOptional, IsNotEmpty, Max, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 /**
@@ -86,5 +86,6 @@ export class SearchBooksDto {
      * This field is optional.
      */
     @Field({ nullable: true })
-    readonly order?: string;
+    @IsIn(['ASC', 'DESC'])
+    readonly order?: 'ASC' | 'DESC';
 }

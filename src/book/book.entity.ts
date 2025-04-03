@@ -66,9 +66,9 @@ export class BookEntity {
     @CreateDateColumn()
     createdAt: Date;
 
+    
     @BeforeInsert()
-    // @BeforeUpdate()
-    formatPublicationDate() {
+    formatPublicationDate(): void {
         this.publication_date = new Date(this.publication_date);
     }
 }

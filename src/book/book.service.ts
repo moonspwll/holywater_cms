@@ -3,6 +3,7 @@ import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BookRepository } from '@app/book/book.repository';
 
 import { BookEntity } from '@app/book/book.entity';
 import { CreateBookDto } from '@app/book/dto/createBook.dto';
@@ -15,9 +16,7 @@ import { BookSearchRequest } from '@app/book/interfaces/book.search.interface';
 @Injectable()
 export class BookService {
     constructor(
-        @InjectRepository(BookEntity)
-        private readonly bookRepository: Repository<BookEntity>,
-
+        private readonly bookRepository: BookRepository,
         @Inject(CACHE_MANAGER)
         private readonly cacheManager: Cache,
 
@@ -38,10 +37,12 @@ export class BookService {
     async createBook(createBookDto: CreateBookDto, userId: string): Promise<BookEntity> {
         const book: BookEntity = this.bookRepository.create(createBookDto);
 
+        book.user_id = userId;
+
         let savedBook: BookEntity;
 
         try {
-            savedBook = await this.bookRepository.save({...book, user_id: userId});
+            savedBook = await this.bookRepository.save(book);
         } catch (error) {
             throw new HttpException('Error creating book', HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -68,7 +69,6 @@ export class BookService {
      */
     async updateBook(updateBookDto: UpdateBookDto, userId: string): Promise<BookEntity> {
         const book = await this.bookRepository.findOne({ where: { id: updateBookDto.id, user_id: userId }});
-
         if (!book) {
             throw new HttpException('Book not found, or you do not have sufficient permissions to edit books added by other users.', HttpStatus.NOT_FOUND);
         }
@@ -85,7 +85,7 @@ export class BookService {
 
         Object.assign(book, updateBookDto);
 
-        return this.bookRepository.save(book, {});
+        return this.bookRepository.save(book);
     }
 
     /**
@@ -97,10 +97,10 @@ export class BookService {
      * @throws {HttpException} - Throws an exception if the book is not found.
      */
     async deleteBook(id: number, userId: string): Promise<BookEntity> {
-        const book = await this.bookRepository.findOne({ where: { id }});
+        const book = await this.bookRepository.findOne({ where: { id, user_id: userId }});
 
         if (!book) {
-            throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+            throw new HttpException('Book not found, or you do not have sufficient permissions to delete books added by other users.', HttpStatus.NOT_FOUND);
         }
 
         this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,
@@ -140,73 +140,51 @@ export class BookService {
      */
     async getBooks(searchBooksDto: SearchBooksDto): Promise<BookSearchRequest> {
         const {
-            title = '',
-            authors = '',
-            average_rating = 0,
-            num_pages = 0,
-            publication_date, 
-            sort_by = 'average_rating', 
-            page = 1,
-            page_size = 10,
-            order = 'DESC',
+          title = '',
+          authors = '',
+          average_rating = 0,
+          num_pages = 0,
+          publication_date,
+          sort_by = 'average_rating',
+          page = 1,
+          page_size = 10,
+          order = 'DESC',
         } = searchBooksDto;
-
+    
+        // Перевіряємо кеш
         const cacheKey = this.generateCacheKey(searchBooksDto);
         const cachedResults = await this.cacheManager.get<string>(cacheKey);
-        
+
+        const validOrder = order && ['ASC', 'DESC'].includes(order) ? order : 'DESC';
+    
         if (cachedResults) {
-            return JSON.parse(cachedResults);
+          return JSON.parse(cachedResults);
         }
-        const queryBuilder = this.bookRepository.createQueryBuilder('book');
-        // Search by title
-        if (title) {
-            queryBuilder.andWhere('book.title ILIKE :title', { title: `%${title}%` });
-        }
-        // Search by authors
-        if (authors) {
-            queryBuilder.andWhere('book.authors ILIKE :authors', { authors: `%${authors}%` });
-        }
-        // Search by average rating
-        if (average_rating) {
-            queryBuilder.andWhere('book.average_rating >= :average_rating', { average_rating });
-        }
-
-        // Search by number of pages
-        if (num_pages) {
-            queryBuilder.andWhere('book.num_pages >= :num_pages', { num_pages });
-        }
-
-        // Search by publication year
-        if (publication_date) {
-            queryBuilder.andWhere('EXTRACT(YEAR FROM book.publication_date) = :publication_date', { publication_date });
-        }
-
-        // Sort the results
-        queryBuilder.orderBy(`book.${sort_by}`, order as 'ASC' | 'DESC');
-
-        // Paginate the results and sort them
-        queryBuilder.skip((page - 1) * page_size);
-
-        queryBuilder.take(page_size);
-
-        // Get the results
-        const searchResults = await queryBuilder.getMany();
-        // Get total count of books
-        const count = await queryBuilder.getCount();
-
-        this.cacheManager.set(cacheKey, JSON.stringify({
-            books: searchResults,
-            total: count,
-            page,
-        }), 60 * 1000);
-
-        return {
-            books: searchResults,
-            total: count,
-            page,
-        }
-
-    }
+    
+        // Викликаємо метод із репозиторію для пошуку книг
+        const { books, total } = await this.bookRepository.searchBooks({
+          title,
+          authors,
+          average_rating,
+          num_pages,
+          publication_date,
+          sort_by,
+          order: validOrder,
+          page,
+          page_size,
+        });
+    
+        // Кешуємо результати
+        const result: BookSearchRequest = {
+          books,
+          total,
+          page,
+        };
+    
+        await this.cacheManager.set(cacheKey, JSON.stringify(result), 60 * 1000);
+    
+        return result;
+      }
 
     /**
      * Generates a cache key based on the properties of the provided SearchBooksDto object.
