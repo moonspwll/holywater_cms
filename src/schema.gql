@@ -15,6 +15,7 @@ type BookEntity {
   ratings_count: Float!
   text_reviews_count: Float!
   title: String!
+  user_id: ID!
 }
 
 type BookSearchResponse {

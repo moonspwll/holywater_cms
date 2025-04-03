@@ -52,4 +52,8 @@ export class CreateBookDto {
     @Field()
     @IsNotEmpty()
     language_code: string;
+
+    // @Field()
+    // @IsNotEmpty()
+    // readonly user_id: string;
 }

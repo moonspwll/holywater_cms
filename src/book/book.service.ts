@@ -41,7 +41,7 @@ export class BookService {
         let savedBook: BookEntity;
 
         try {
-            savedBook = await this.bookRepository.save(book);
+            savedBook = await this.bookRepository.save({...book, user_id: userId});
         } catch (error) {
             throw new HttpException('Error creating book', HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -67,10 +67,10 @@ export class BookService {
      * @throws HttpException - If the book is not found.
      */
     async updateBook(updateBookDto: UpdateBookDto, userId: string): Promise<BookEntity> {
-        const book = await this.bookRepository.findOne({ where: { id: updateBookDto.id }});
+        const book = await this.bookRepository.findOne({ where: { id: updateBookDto.id, user_id: userId }});
 
         if (!book) {
-            throw new HttpException('Book not found', HttpStatus.NOT_FOUND);
+            throw new HttpException('Book not found, or you do not have sufficient permissions to edit books added by other users.', HttpStatus.NOT_FOUND);
         }
 
         this.dynamoService.putItem(this.DYNAMODB_TABLE_NAME,

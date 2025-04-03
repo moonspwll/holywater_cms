@@ -59,6 +59,10 @@ export class BookEntity {
     @Column()
     publisher: string;
 
+    @Field(() => ID)
+    @Column('uuid')
+    user_id: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
