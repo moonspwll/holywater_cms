@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, Unique, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, Index, In } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 /**
  * Represents a book entity in the database.
@@ -8,6 +8,11 @@ import { ObjectType, Field, ID } from '@nestjs/graphql';
  */
 @ObjectType()
 @Entity({ name: 'books'})
+// title = '',
+//           authors = '',
+//           average_rating = 0,
+//           num_pages = 0,
+//           publication_date,
 export class BookEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn()
@@ -15,16 +20,19 @@ export class BookEntity {
 
     @Field()
     @Column()
+    @Index('idx_title', { fulltext: true })
     title: string;
 
     @Field()
     @Column()
+    @Index('idx_authors', { fulltext: true })
     authors: string;
     /*
 
     */
     @Field()
     @Column('float')
+    @Index('idx_average_rating')
     average_rating: number;
 
     @Field()
@@ -41,6 +49,7 @@ export class BookEntity {
 
     @Field()
     @Column()
+    @Index('idx_num_pages')
     num_pages: number;
 
     @Field()
