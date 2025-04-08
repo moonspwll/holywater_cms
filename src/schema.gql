@@ -99,6 +99,7 @@ input UpdateBookDto {
 
 type UserEntity {
   bio: String!
+  books: [BookEntity!]
   email: String!
   id: ID!
   image: String!

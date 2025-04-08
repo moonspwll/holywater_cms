@@ -11,5 +11,6 @@ import { BookEntity } from '@app/book/book.entity';
 @Module({
     imports: [TypeOrmModule.forFeature([BookEntity]), CacheModule.register(), DynamoModule],
     providers: [BookResolver, BookService, BookRepository],
+    exports: [BookService, BookRepository],
 })
 export class BookModule {};

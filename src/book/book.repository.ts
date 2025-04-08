@@ -1,4 +1,4 @@
-import { Repository, FindOneOptions, DeleteResult } from 'typeorm';
+import { Repository, FindOneOptions, DeleteResult, FindManyOptions } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookEntity } from '@app/book/book.entity';
@@ -27,6 +27,10 @@ export class BookRepository {
 
   async findOne(options: FindOneOptions<BookEntity>): Promise<BookEntity | null> {
     return this.repo.findOne(options);
+  }
+
+  async findAll(options: FindManyOptions<BookEntity>): Promise<BookEntity[]> {
+    return this.repo.find(options);
   }
 
   async delete(criteria: { id: number }): Promise<DeleteResult> {

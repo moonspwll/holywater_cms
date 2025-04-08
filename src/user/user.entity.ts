@@ -1,5 +1,6 @@
 import { hash } from 'bcrypt';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn } from 'typeorm';
+import { BookEntity } from '@app/book/book.entity';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { UserRole } from '@app/user/enums/user.role.enum';
 
@@ -54,6 +55,9 @@ export class UserEntity {
 
     @Field()
     token: string
+
+    @Field(() => [BookEntity], { nullable: true })
+    books?: BookEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

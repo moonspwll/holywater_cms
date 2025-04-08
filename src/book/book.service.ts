@@ -186,6 +186,11 @@ export class BookService {
         return result;
       }
 
+      async findBooksByUserId(userId: string): Promise<BookEntity[]> {
+        const books = await this.bookRepository.findAll({ where: { user_id: userId }});
+        return books;
+      }
+
     /**
      * Generates a cache key based on the properties of the provided SearchBooksDto object.
      * The cache key is constructed by concatenating the key-value pairs of the dto object
